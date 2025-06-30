@@ -1,13 +1,29 @@
 package org.besser.teto;
 
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import static org.besser.teto.DIETLogger.*;
 
 public final class Teto extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // Plugin startup logic
+        DIETLogger.initialize(this);
 
+        saveDefaultConfig();
+
+        boolean isEnabledInConfig = getConfig().getBoolean("teto.enable", true);
+        if (!isEnabledInConfig) {
+            log(WARNING, "TEAW Tools is disabled in config.yml and will not start.");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+
+
+
+
+        log(INFO, ChatColor.AQUA + "TEAW Tools " + ChatColor.GOLD + "v" + getDescription().getVersion() + ChatColor.RESET + " started!");
     }
 
     @Override
