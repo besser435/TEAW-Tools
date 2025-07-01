@@ -1,9 +1,20 @@
-name: TEAW Tools
+name: TEAW-Tools
 version: ${project.version}
 main: org.besser.teto.Teto
 api-version: '1.20'
 prefix: TETO
 description: A plugin to help manage miscellaneous TEAW functions.
 website: https://github.com/besser435/TEAW-Tools
-authors: [ besser ]
-depend: [ ]
+authors: [besser]
+depend: [Towny, Essentials, DiscordSRV]
+
+permissions:
+  teto.decay:
+    description: Allows running the town decay command
+    default: op
+
+commands:
+  decaycheck:
+    description: Manually runs the town decay check and ruins inactive towns
+    usage: /decaycheck
+    permission: teto.decay

@@ -1,5 +1,8 @@
 package org.besser.teto;
 
+import org.besser.teto.Commands.CommandHandler;
+import org.besser.teto.TownDecay.TownDecay;
+import org.besser.teto.TownDecay.TownScreenListener;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -11,7 +14,7 @@ public final class Teto extends JavaPlugin {
     public void onEnable() {
         DIETLogger.initialize(this);
 
-        saveDefaultConfig();
+        saveDefaultConfig();    // Fails silently if the config.yml already exists.
 
         boolean isEnabledInConfig = getConfig().getBoolean("teto.enable", true);
         if (!isEnabledInConfig) {
@@ -19,15 +22,18 @@ public final class Teto extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
-
-
-
-
         log(INFO, ChatColor.AQUA + "TEAW Tools " + ChatColor.GOLD + "v" + getDescription().getVersion() + ChatColor.RESET + " started!");
+
+
+        // Town Decay
+        TownDecay decay = new TownDecay(this);
+        getCommand("decaycheck").setExecutor(new CommandHandler(decay));
+        getServer().getPluginManager().registerEvents(new TownScreenListener(), this);
     }
+
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        log(INFO, ChatColor.AQUA + "TEAW Tools " + ChatColor.GOLD + "v" + getDescription().getVersion() + ChatColor.RESET + " stopped!");
     }
 }

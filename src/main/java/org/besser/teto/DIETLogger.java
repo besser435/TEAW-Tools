@@ -30,6 +30,7 @@ public class DIETLogger {
     public static final Level INFO = Level.INFO;
     public static final Level WARNING = Level.WARNING;
     public static final Level SEVERE = Level.SEVERE;
+
     public static final Level CONFIG = Level.CONFIG;
     public static final Level FINE = Level.FINE;
     public static final Level FINER = Level.FINER;

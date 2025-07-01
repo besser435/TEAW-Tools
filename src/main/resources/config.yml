@@ -1,3 +1,8 @@
 teto:
   # Enable or disable the plugin
   enable: true
+
+town-decay:
+  enable: true
+  # How long a town mayer needs to be offline for before a town is set to ruins
+  decay-duration-days: 90
