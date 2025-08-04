@@ -18,6 +18,7 @@ public class TownDecay {
         this.plugin = plugin;
     }
 
+    // TODO: check that this module is enabled in config.yml. if not, skip
     public void runDecayCheckAndRuin() {
         for (Town town : TownyAPI.getInstance().getTowns()) {
             try {
@@ -28,13 +29,15 @@ public class TownDecay {
                 long daysSince = TimeUnit.MILLISECONDS.toDays(System.currentTimeMillis() - lastPlayed);
 
                 if (daysSince >= 90 && !town.isRuined()) {
-                    log(INFO, "Ruining town '" + town.getName() + "' because mayor '" + mayor.getName() + "' has been inactive for " + daysSince + " days.");
+                    log(INFO, "[Town decay] Ruining town '" + town.getName() + "' because mayor '" + mayor.getName() + "' has been inactive for " + daysSince + " days.");
                     town.setRuined(true);
                     town.setRuinedTime(System.currentTimeMillis());
                 }
 
+                // BUG: the ruined status might not be saved. there is a manual save command, use that
+
             } catch (Exception e) {
-                log(WARNING, "TECO Town Decay failed to check/ruin town: " + e.getMessage());
+                log(WARNING, "[Town decay] Town Decay failed to check/ruin town: " + e.getMessage());
             }
         }
     }
