@@ -23,6 +23,7 @@ public class RandomSpawn implements Listener {
     private final World world;
     private final JavaPlugin plugin;
     private final Essentials essentials;
+    private boolean essOverriding = false;
 
     public RandomSpawn(JavaPlugin plugin, Essentials essentials) {
         this.plugin = plugin;
@@ -42,6 +43,7 @@ public class RandomSpawn implements Listener {
         //log(WARNING, "debug, essSpawnJoinPriority = " + essSpawnJoinPriority);
         if (!(essSpawnJoinPriority == null)) {
             log(SEVERE, "[Random spawn] Essentials is overriding spawn join priority (" + essSpawnJoinPriority + "). TETO random spawns will not work.");
+            this.essOverriding = true;
         }
     }
 
@@ -61,6 +63,8 @@ public class RandomSpawn implements Listener {
         Location randomSpawn = getRandomSpawnLocation();
         if (randomSpawn != null) {
             event.setSpawnLocation(randomSpawn);
+
+            if (essOverriding) {log(WARNING, "[Random spawn] Essentials may override random spawn");}
 
             log(INFO, "[Random spawn] Found spawn at " + randomSpawn.getX() + " " + randomSpawn.getZ() +
                     " for player " + player.getName());
