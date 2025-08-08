@@ -13,15 +13,17 @@ import static org.besser.teto.DIETLogger.*;
 public class CommandHandler implements CommandExecutor, TabCompleter {
     private final TownDecay townDecay;
 
-    public CommandHandler(TownDecay townDecay) {
+    // TODO: commands are also missing /teto: prefix
+
+    public CommandHandler(TownDecay townDecay) {    // wtf is this, needs to not just be decay
         this.townDecay = townDecay;
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        log(INFO, "Running town decay check manually...");
+        log(INFO, "Running command " + command.getName());
+
         townDecay.runDecayCheckAndRuin();
-        sender.sendMessage("§aDecay check executed!");
         return true;
     }
 

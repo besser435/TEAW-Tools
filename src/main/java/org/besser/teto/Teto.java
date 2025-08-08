@@ -1,8 +1,11 @@
 package org.besser.teto;
 
 import com.earth2me.essentials.Essentials;
+import org.besser.teto.Commands.CommandHandler;
 import org.besser.teto.RandomSpawn.RandomSpawn;
 import org.besser.teto.TownDecay.TownDecay;
+import org.besser.teto.TownDecay.TownDecayListener;
+import org.besser.teto.TownDecay.TownScreenListener;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -37,9 +40,11 @@ public final class Teto extends JavaPlugin {
         // Town Decay
         // Run the decay at server start, and at every new towny day (in case we stop doing nightly restarts).
         // Run Discord announcement of decay also on start and every 24 hours.
-        TownDecay decay = new TownDecay(this);
+        TownDecay townDecay = new TownDecay(this);
+        getServer().getPluginManager().registerEvents(new TownDecayListener(townDecay), this);
         //getCommand("decaycheck").setExecutor(new CommandHandler(decay));
-        //getServer().getPluginManager().registerEvents(new TownScreenListener(), this);
+
+        getServer().getPluginManager().registerEvents(new TownScreenListener(), this);
 
         // Random spawns
         RandomSpawn randomSpawn = new RandomSpawn(this, essentials);

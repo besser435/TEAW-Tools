@@ -37,9 +37,9 @@ public class TownScreenListener implements Listener {
             long daysUntilDecay = DECAY_DAYS - daysSinceLastLogin;
 
             if (daysUntilDecay <= 0) {
-                decayStatus = ChatColor.RED + "Eligible for decay (mayor is inactive " + daysSinceLastLogin + " days)";
+                decayStatus = ChatColor.RED + "Eligible for decay (mayor inactive for " + daysSinceLastLogin + " days)";
             } else {
-                decayStatus = ChatColor.YELLOW + "Decays in: " + daysUntilDecay + " day" + (daysUntilDecay == 1 ? "" : "s (Mayor is active)");
+                decayStatus = ChatColor.YELLOW + "Decays in: " + daysUntilDecay + " day" + (daysUntilDecay == 1 ? "" : "s (mayor is active)");
             }
         }
 

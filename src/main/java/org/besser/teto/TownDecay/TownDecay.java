@@ -11,12 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.besser.teto.DIETLogger.*;
 
-public class TownDecay {
-    private final JavaPlugin plugin;
-
-    public TownDecay(JavaPlugin plugin) {
-        this.plugin = plugin;
-    }
+public record TownDecay(JavaPlugin plugin) {
 
     // TODO: check that this module is enabled in config.yml. if not, skip
     // TODO: should be called on every new towny day. send alerts at 87, 88, and 89 days, and delete on the 90th day.
@@ -29,16 +24,20 @@ public class TownDecay {
                 long lastPlayed = mayorOffline.getLastPlayed();
                 long daysSince = TimeUnit.MILLISECONDS.toDays(System.currentTimeMillis() - lastPlayed);
 
+                // Send warnings to Discord. Code would be cleaner if that was handled somewhere else, but oh well
+                //if (daysSince == 87 && !town.isRuined()) {}   // 3 day warning.
+
+                //if (daysSince == 88 && !town.isRuined()) {}   // 2 day warning
+
+                //if (daysSince == 89 && !town.isRuined()) {}   // 1 day warning
+
                 if (daysSince >= 90 && !town.isRuined()) {
-                    log(INFO, "[Town decay] Ruining town '" + town.getName() + "' because mayor '" + mayor.getName() + "' has been inactive for " + daysSince + " days.");
+                    log(INFO, "[Town decay] Ruining town '" + town.getName() + "' mayor '" + mayor.getName() + "' inactive for " + daysSince + " days");
                     town.setRuined(true);
                     town.setRuinedTime(System.currentTimeMillis());
+
+                    town.save();    // Does this fix the saving issue?
                 }
-
-                //town.save();    // Does this fix the saving issue?
-
-                // BUG: the ruined status might not be saved. there is a manual save command, use that
-
             } catch (Exception e) {
                 log(WARNING, "[Town decay] Town Decay failed to check/ruin town: " + e.getMessage());
             }

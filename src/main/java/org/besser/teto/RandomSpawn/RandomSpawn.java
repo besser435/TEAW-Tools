@@ -67,7 +67,7 @@ public class RandomSpawn implements Listener {
             if (essOverriding) {log(WARNING, "[Random spawn] Essentials may override random spawn");}
 
             log(INFO, "[Random spawn] Found spawn at " + randomSpawn.getX() + " " + randomSpawn.getZ() +
-                    " for player " + player.getName());
+                    " for " + player.getName());
         } else {
            log(SEVERE, "[Random spawn] Failed to find a valid spawn location!");
         }
