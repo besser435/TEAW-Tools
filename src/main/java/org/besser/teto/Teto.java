@@ -21,7 +21,7 @@ public final class Teto extends JavaPlugin {
 
         saveDefaultConfig();    // Fails silently if the config.yml already exists.
 
-        boolean isEnabledInConfig = getConfig().getBoolean("teto.enable", true);
+        boolean isEnabledInConfig = getConfig().getBoolean("teto.enabled", true);
         if (!isEnabledInConfig) {
             log(WARNING, "TEAW Tools is disabled in config.yml and will not start.");
             getServer().getPluginManager().disablePlugin(this);
@@ -38,17 +38,20 @@ public final class Teto extends JavaPlugin {
 
 
         // Town Decay
-        // Run the decay at server start, and at every new towny day (in case we stop doing nightly restarts).
-        // Run Discord announcement of decay also on start and every 24 hours.
-        TownDecay townDecay = new TownDecay(this);
-        getServer().getPluginManager().registerEvents(new TownDecayListener(townDecay), this);
-        //getCommand("decaycheck").setExecutor(new CommandHandler(decay));
-
-        getServer().getPluginManager().registerEvents(new TownScreenListener(), this);
+        boolean isTownDecayEnabled = getConfig().getBoolean("town-decay.enabled", true);
+        if (isTownDecayEnabled) {
+            TownDecay townDecay = new TownDecay(this);
+            getServer().getPluginManager().registerEvents(new TownDecayListener(townDecay), this);
+            //getCommand("decaycheck").setExecutor(new CommandHandler(decay));
+            getServer().getPluginManager().registerEvents(new TownScreenListener(), this);
+        }
 
         // Random spawns
-        RandomSpawn randomSpawn = new RandomSpawn(this, essentials);
-        getServer().getPluginManager().registerEvents(randomSpawn, this);
+        boolean isRandomSpawnsEnabled = getConfig().getBoolean("random-spawns.enabled", true);
+        if (isRandomSpawnsEnabled) {
+            RandomSpawn randomSpawn = new RandomSpawn(this, essentials);
+            getServer().getPluginManager().registerEvents(randomSpawn, this);
+        }
     }
 
     private boolean setupEssentials() {

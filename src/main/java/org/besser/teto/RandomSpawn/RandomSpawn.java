@@ -11,14 +11,15 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
+
 import static org.besser.teto.DIETLogger.*;
+//import org.besser.teto.RandomSpawn.SpawnFinder;
 
 import java.io.File;
 import java.util.List;
 import java.util.Random;
 
 public class RandomSpawn implements Listener {
-    private final File configFile;
     private final YamlConfiguration spawnConfig;
     private final World world;
     private final JavaPlugin plugin;
@@ -30,8 +31,7 @@ public class RandomSpawn implements Listener {
         this.world = Bukkit.getWorlds().get(0); // Might cause issues if using BungeeCord. Should use getWorld({world name set in config})
         this.essentials = essentials;
 
-        // Load the random_spawn_locations.yaml file
-        this.configFile = new File(plugin.getDataFolder(), "random_spawn_locations.yml");
+        File configFile = new File(plugin.getDataFolder(), "random_spawn_locations.yml");
         if (!configFile.exists()) {
             plugin.getLogger().info("[Random spawn] No spawn file found, generating random_spawn_locations.yml");
             plugin.saveResource("random_spawn_locations.yml", false);
@@ -95,8 +95,7 @@ public class RandomSpawn implements Listener {
 
                     Location spawnLoc = new Location(world, x + 0.5, y + 1, z + 0.5);
 
-                    // use IsSpawnFinder to verify this location is safe
-                    // if (!IsSpawnFinder.isSafe(spawnLoc)) continue;
+                    if (!SpawnFinder.isSafe(spawnLoc)) continue;
 
                     return spawnLoc;
                 } catch (Exception e) {

@@ -1,12 +1,12 @@
 teto:
   # Enable or disable the plugin
-  enable: true
+  enabled: true
 
 town-decay:
-  enable: true
+  enabled: true
   # How long a town mayer needs to be offline for before a town is set to ruins
   decay-duration-days: 90
 
 random-spawns:
   # Spawn locations are in random_spawn_locations.yml
-  enable: true
+  enabled: true
