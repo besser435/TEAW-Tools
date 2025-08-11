@@ -1,17 +1,17 @@
+# Use the "Targeted Block" on the right side of the screen, not the "XYZ" on the left to set coordinates.
+# Otherwise players might spawn one block off from the target due to how we center players on the block.
+# Y coordinates here are not used, as we find it automatically.
 spawn_locations:
-  - x: 0
-    z: -520
+   #- x: 4813  # up north, middle of nowhere
+   # z: -6829
 
-  - x: -8180
-    z: -3385
+  #- x: 479  # USAI, should fail due to not wilderness.
+  #  z: -4544
 
-  - x: 4804
-    z: -6816
+  #- x: 695  # Middle of an ocean
+  #  z: -4300
 
-  - x: -5175
-    z: -6651
-
-  - x: -11855
-    z: -6933
+  - x: -12014 # On a mountain, at Y150
+    z: -5344
 
 
