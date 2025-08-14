@@ -1,12 +1,31 @@
 teto:
-  # Enable or disable the plugin
+  # Enable or disable the plugin.
   enabled: true
 
 town-decay:
-  enabled: true
-  # How long a town mayer needs to be offline for before a town is set to ruins
+  enabled: false
+  # How long a town mayer needs to be offline for before a town is set to ruins.
   decay-duration-days: 90
 
 random-spawns:
-  # Spawn locations are in random_spawn_locations.yml
+  # Spawn locations are in random_spawn_locations.yml.
   enabled: true
+  # Blocks/tags players can spawn on. Uses Spigot material and tag names.
+  allowed-spawn-blocks:
+    - MOSS_BLOCK
+    - STONE
+    - GRAVEL
+  allowed-spawn-tags:
+    - DIRT
+    - SAND
+    - LOGS
+    - LEAVES
+  # Used to determine if a spawn is inside the world border. Since TEAW
+  # doesn't use the vanilla world border, we have to do this.
+  world-border:
+    sw-corner:
+      - x: 0
+        z: 0
+    ne-corner:
+      - x: 100
+        z: 100

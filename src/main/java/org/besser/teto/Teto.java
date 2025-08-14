@@ -3,6 +3,7 @@ package org.besser.teto;
 import com.earth2me.essentials.Essentials;
 import org.besser.teto.Commands.CommandHandler;
 import org.besser.teto.RandomSpawn.RandomSpawn;
+import org.besser.teto.RandomSpawn.SpawnFinder;
 import org.besser.teto.TownDecay.TownDecay;
 import org.besser.teto.TownDecay.TownDecayListener;
 import org.besser.teto.TownDecay.TownScreenListener;
@@ -38,7 +39,7 @@ public final class Teto extends JavaPlugin {
 
 
         // Town Decay
-        boolean isTownDecayEnabled = getConfig().getBoolean("town-decay.enabled", true);
+        boolean isTownDecayEnabled = getConfig().getBoolean("town-decay.enabled", false);
         if (isTownDecayEnabled) {
             TownDecay townDecay = new TownDecay(this);
             getServer().getPluginManager().registerEvents(new TownDecayListener(townDecay), this);
@@ -49,6 +50,7 @@ public final class Teto extends JavaPlugin {
         // Random spawns
         boolean isRandomSpawnsEnabled = getConfig().getBoolean("random-spawns.enabled", true);
         if (isRandomSpawnsEnabled) {
+            SpawnFinder.loadConfig(getConfig());
             RandomSpawn randomSpawn = new RandomSpawn(this, essentials);
             getServer().getPluginManager().registerEvents(randomSpawn, this);
         }

@@ -11,7 +11,10 @@ spawn_locations:
   #- x: 695  # Middle of an ocean
   #  z: -4300
 
-  - x: -12014 # On a mountain, at Y150
-    z: -5344
+  #- x: -12014 # On a mountain, at Y150
+  #  z: -5344
+
+  - x: 518
+    z: -4786
 
 
