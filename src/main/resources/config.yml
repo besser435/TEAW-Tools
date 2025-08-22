@@ -23,9 +23,9 @@ random-spawns:
   # Used to determine if a spawn is inside the world border. Since TEAW
   # doesn't use the vanilla world border, we have to do this.
   world-border:
-    sw-corner:
-      - x: 0
-        z: 0
-    ne-corner:
-      - x: 100
-        z: 100
+    sw-corner:  # Southwest corner
+      x: -18430
+      z: -275
+    ne-corner:  # Northeast corner
+      x: 7070
+      z: -9201
