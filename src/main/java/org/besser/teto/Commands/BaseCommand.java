@@ -30,11 +30,6 @@ public abstract class BaseCommand {
     public boolean isPlayerOnly() { return playerOnly; }
     public boolean requiresConfirmation() { return requiresConfirmation; }
 
-
-    // TODO: adding a confirmation feature for commands that really really should be double checked seems hard. They need
-    // tickets, and ya gotta keep track of it all. Fix this by just making any commands that need confirmation end with
-    // "confirm-destructive" argument or something.
-
     protected boolean hasPermission(CommandSender sender) {
         return permission == null || sender.hasPermission(permission);
     }

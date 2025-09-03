@@ -9,6 +9,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.ChatColor;
 
+import static org.besser.teto.DIETLogger.*;
+
 import java.util.*;
 
 public class CommandManager implements CommandExecutor, TabCompleter {
@@ -155,17 +157,18 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                 currentTime - entry.getValue().timestamp > 120_000);
     }
 
-    // TODO: redo error handling.
     private boolean executeCommand(BaseCommand command, CommandSender sender, String[] args) {
         try {
             return command.execute(sender, args);
         } catch (Exception e) {
-            sender.sendMessage(ChatColor.RED + "An error occurred while executing the command.");
-            e.printStackTrace();
+            sender.sendMessage(ChatColor.RED + "An error occurred while executing the command. Please notify an admin if this persists.");
+
+            log(SEVERE, "[TETO] Error while executing command '" + command.getName() +
+                        "' from sender " + sender.getName(), e);
+
             return true;
         }
     }
-
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {

@@ -1,6 +1,5 @@
 package org.besser.teto;
 
-import org.bukkit.plugin.Plugin;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -9,6 +8,8 @@ public class DIETLogger {
 
     public static void initialize(Teto plugin) {
         logger = plugin.getLogger();
+        // TODO: Import chat colors, so its not needed in each file, and so we can just call the color
+        // Also add logger level param when creating this class in Teto.java.
     }
 
     /**
@@ -18,9 +19,24 @@ public class DIETLogger {
      * @param message the message to be logged, can be any type.
      */
     public static void log(Level level, Object message) {
-        // TODO: Import chat colors, so its not needed in each file, and so we can just call the color
         if (logger != null) {
             logger.log(level, String.valueOf(message));
+        } else {
+            System.out.println("Logger not initialized: " + message);
+        }
+    }
+
+    /**
+     * Helper method to shorten the usage of {@code log}.
+     * Automatically severity imports levels.
+     * @param level     the logging level, such as INFO, WARNING, SEVERE, etc.
+     * @param message   the message to be logged, can be any type.
+     * @param throwable a throwable error message.
+     *
+     */
+    public static void log(Level level, Object message, Throwable throwable) {
+        if (logger != null) {
+            logger.log(level, String.valueOf(message), throwable);
         } else {
             System.out.println("Logger not initialized: " + message);
         }
