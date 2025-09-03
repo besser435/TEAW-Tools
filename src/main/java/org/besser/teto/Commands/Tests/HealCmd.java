@@ -19,6 +19,7 @@ public class HealCmd extends BaseCommand {
             "teto.heal",
             "Heal yourself or another player.",
             "/teto heal [player]",
+            false,
             false);
     }
 

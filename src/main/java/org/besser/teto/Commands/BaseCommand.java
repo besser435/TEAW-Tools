@@ -10,13 +10,15 @@ public abstract class BaseCommand {
     protected final String description;
     protected final String usage;
     protected final boolean playerOnly;
+    protected final boolean requiresConfirmation;
 
-    public BaseCommand(String name, String permission, String description, String usage, boolean playerOnly) {
+    public BaseCommand(String name, String permission, String description, String usage, boolean playerOnly, boolean requiresConfirmation) {
         this.name = name;
         this.permission = permission;
         this.description = description;
         this.usage = usage;
         this.playerOnly = playerOnly;
+        this.requiresConfirmation = requiresConfirmation;
     }
 
     public abstract boolean execute(CommandSender sender, String[] args);
@@ -26,6 +28,7 @@ public abstract class BaseCommand {
     public String getDescription() { return description; }
     public String getUsage() { return usage; }
     public boolean isPlayerOnly() { return playerOnly; }
+    public boolean requiresConfirmation() { return requiresConfirmation; }
 
 
     // TODO: adding a confirmation feature for commands that really really should be double checked seems hard. They need
@@ -54,5 +57,9 @@ public abstract class BaseCommand {
 
     protected Player getPlayer(CommandSender sender) {
         return (Player) sender;
+    }
+
+    protected String getConfirmationMessage(CommandSender sender, String[] args) {
+        return "Are you sure you want to execute this command?";
     }
 }

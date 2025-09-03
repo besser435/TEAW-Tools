@@ -7,11 +7,6 @@ import org.besser.teto.TownDecay.TownDecay;
 import org.bukkit.command.CommandSender;
 
 public class DecayTownsCmd extends BaseCommand {
-
-
-    // TODO: Throws null pointer when decay is enabled. has to do with fucky logig in main Teto class.
-    // Fix by creating a
-
     private final TownDecay townDecay;
 
     public DecayTownsCmd(Teto plugin) {
@@ -19,7 +14,8 @@ public class DecayTownsCmd extends BaseCommand {
             "teto.decay",
             "Ruins all inactive towns and sends an alert to towns that will become inactive soon.",
             "/teto decay",
-            false);
+            false,
+            true);
         this.townDecay = plugin.getTownDecay();
     }
 
@@ -32,5 +28,10 @@ public class DecayTownsCmd extends BaseCommand {
         sendSuccess(sender,"Ruined " + decayedTowns + " towns!");
 
         return true;
+    }
+
+    @Override
+    public String getConfirmationMessage(CommandSender sender, String[] args) {
+        return "This will put towns into the ruined state. Are you sure you want to execute this command?";
     }
 }

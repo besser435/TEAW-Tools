@@ -14,9 +14,25 @@ import java.util.*;
 public class CommandManager implements CommandExecutor, TabCompleter {
     private final Teto plugin;
     private final HashMap<String, BaseCommand> commands = new HashMap<>();
+    private final HashMap<String, PendingCommand> pendingConfirmations = new HashMap<>();
+
+    private static class PendingCommand {
+        final BaseCommand command;
+        final String[] args;
+        final long timestamp;
+
+        PendingCommand(BaseCommand command, String[] args) {
+            this.command = command;
+            this.args = args;
+            this.timestamp = System.currentTimeMillis();
+        }
+    }
 
     public CommandManager(Teto plugin) {
         this.plugin = plugin;
+
+        // Clean up expired confirmations every 60 seconds
+        plugin.getServer().getScheduler().runTaskTimer(plugin, this::cleanupExpiredConfirmations, 1200L, 1200L);
     }
 
     public void registerCommands() {
@@ -42,9 +58,19 @@ public class CommandManager implements CommandExecutor, TabCompleter {
             return true;
         }
 
+        // Handle confirmation command
+        if (args[0].equalsIgnoreCase("confirm")) {
+            return handleConfirmation(sender);
+        }
+
+        // Handle cancel command
+        if (args[0].equalsIgnoreCase("cancel")) {
+            return handleCancellation(sender);
+        }
+
         BaseCommand cmd = commands.get(args[0].toLowerCase());
         if (cmd == null) {
-            sender.sendMessage( "[TETO] " + ChatColor.RED + "Unknown command. Use /teto help for available commands.");
+            sender.sendMessage( "[TETO] " + ChatColor.RED + "Unknown command. Use /teto for available commands.");
             showHelp(sender);
             return true;
         }
@@ -61,28 +87,107 @@ public class CommandManager implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        // Execute command with remaining arguments
         String[] cmdArgs = Arrays.copyOfRange(args, 1, args.length);
+
+        // Check if command requires confirmation
+        if (cmd.requiresConfirmation()) {
+            String senderKey = getSenderKey(sender);
+
+            // Store the pending command
+            pendingConfirmations.put(senderKey, new PendingCommand(cmd, cmdArgs));
+
+            // Send confirmation message
+            sender.sendMessage(ChatColor.YELLOW + "⚠ " + cmd.getConfirmationMessage(sender, cmdArgs));
+            sender.sendMessage(ChatColor.GREEN + "Type " + ChatColor.WHITE + "/teto confirm" +
+                               ChatColor.GREEN + " to proceed or " + ChatColor.WHITE + "/teto cancel" +
+                               ChatColor.GREEN + " to cancel.");
+
+            return true;
+        }
+
+        // Execute command with remaining arguments
+        return executeCommand(cmd, sender, cmdArgs);
+    }
+
+    private boolean handleConfirmation(CommandSender sender) {
+        String senderKey = getSenderKey(sender);
+        PendingCommand pending = pendingConfirmations.remove(senderKey);
+
+        if (pending == null) {
+            sender.sendMessage(ChatColor.RED + "You have no pending command to confirm.");
+            return true;
+        }
+
+        // Check if confirmation has expired (30 seconds)
+        if (System.currentTimeMillis() - pending.timestamp > 30_000) {
+            sender.sendMessage(ChatColor.RED + "Command confirmation has expired.");
+            return true;
+        }
+
+        // Execute the confirmed command
+        return executeCommand(pending.command, sender, pending.args);
+    }
+
+    private boolean handleCancellation(CommandSender sender) {
+        String senderKey = getSenderKey(sender);
+        PendingCommand pending = pendingConfirmations.remove(senderKey);
+
+        if (pending == null) {
+            sender.sendMessage(ChatColor.RED + "You have no pending command to cancel.");
+            return true;
+        }
+
+        sender.sendMessage(ChatColor.BLUE + "Command cancelled.");
+        return true;
+    }
+
+    private String getSenderKey(CommandSender sender) {
+        if (sender instanceof org.bukkit.entity.Player) {
+            return ((org.bukkit.entity.Player) sender).getUniqueId().toString();
+        }
+        return "CONSOLE";
+    }
+
+    private void cleanupExpiredConfirmations() {
+        long currentTime = System.currentTimeMillis();
+        pendingConfirmations.entrySet().removeIf(entry ->
+                // 2 minutes, as to allow players to see the Expired warning. Otherwise, it gets deleted and they don't see that.
+                currentTime - entry.getValue().timestamp > 120_000);
+    }
+
+    // TODO: redo error handling.
+    private boolean executeCommand(BaseCommand command, CommandSender sender, String[] args) {
         try {
-            return cmd.execute(sender, cmdArgs);
+            return command.execute(sender, args);
         } catch (Exception e) {
-            sender.sendMessage("[TETO] " + ChatColor.RED + "An error occurred while executing the command.");
-            e.printStackTrace();    // TODO: handle this better before moving into prod
+            sender.sendMessage(ChatColor.RED + "An error occurred while executing the command.");
+            e.printStackTrace();
             return true;
         }
     }
+
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         List<String> completions = new ArrayList<>();
 
         if (args.length == 1) {
+            String input = args[0].toLowerCase();
+
             // Tab complete command names
             for (String cmdName : commands.keySet()) {
                 BaseCommand cmd = commands.get(cmdName);
-                if (cmd.hasPermission(sender) && cmdName.toLowerCase().startsWith(args[0].toLowerCase())) {
+                if (cmd.hasPermission(sender) && cmdName.toLowerCase().startsWith(input)) {
                     completions.add(cmdName);
                 }
+            }
+
+            // Always add confirm/cancel to tab completion
+            if ("confirm".startsWith(input)) {
+                completions.add("confirm");
+            }
+            if ("cancel".startsWith(input)) {
+                completions.add("cancel");
             }
         }
 
