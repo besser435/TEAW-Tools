@@ -11,7 +11,9 @@ public record TownDecayListener(TownDecay townDecay) implements Listener {
     // untested
     @EventHandler
     public void onNewDay(NewDayEvent event) {
-        // only register this even in Teto.java if decay module is enabled
+        // TODO: Towny usually sends a message in global chat if a town goes into ruin.
+        // Make sure that works, if not add a global broadcast.
+
         log(INFO, "[Town decay] New Towny day, running town decay check");
 
         townDecay.runDecayCheckAndRuin();

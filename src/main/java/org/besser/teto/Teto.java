@@ -1,12 +1,14 @@
 package org.besser.teto;
 
 import com.earth2me.essentials.Essentials;
-import org.besser.teto.Commands.CommandHandler;
+
+import org.besser.teto.Commands.CommandManager;
 import org.besser.teto.RandomSpawn.RandomSpawn;
 import org.besser.teto.RandomSpawn.SpawnFinder;
 import org.besser.teto.TownDecay.TownDecay;
 import org.besser.teto.TownDecay.TownDecayListener;
 import org.besser.teto.TownDecay.TownScreenListener;
+
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -15,6 +17,7 @@ import static org.besser.teto.DIETLogger.*;
 
 public final class Teto extends JavaPlugin {
     private static Essentials essentials = null;
+    private static TownDecay townDecay = null;
 
     @Override
     public void onEnable() {
@@ -35,15 +38,11 @@ public final class Teto extends JavaPlugin {
             return;
         }
 
-        log(INFO, ChatColor.AQUA + "TEAW Tools " + ChatColor.GOLD + "v" + getDescription().getVersion() + ChatColor.RESET + " started!");
-
-
         // Town Decay
         boolean isTownDecayEnabled = getConfig().getBoolean("town-decay.enabled", false);
         if (isTownDecayEnabled) {
-            TownDecay townDecay = new TownDecay(this);
+            townDecay = new TownDecay(this);
             getServer().getPluginManager().registerEvents(new TownDecayListener(townDecay), this);
-            //getCommand("decaycheck").setExecutor(new CommandHandler(decay));
             getServer().getPluginManager().registerEvents(new TownScreenListener(), this);
         }
 
@@ -54,8 +53,14 @@ public final class Teto extends JavaPlugin {
             RandomSpawn randomSpawn = new RandomSpawn(this, essentials);
             getServer().getPluginManager().registerEvents(randomSpawn, this);
         }
+
+        // Set up commands (reminder, needs to happen after objects are initialized)
+        CommandManager commandManager = new CommandManager(this);
+        commandManager.registerCommands();
+        log(INFO, ChatColor.AQUA + "TEAW Tools " + ChatColor.GOLD + "v" + getDescription().getVersion() + ChatColor.RESET + " started!");
     }
 
+    // Setup depends
     private boolean setupEssentials() {
         Plugin essentialsPlugin = getServer().getPluginManager().getPlugin("Essentials");
         if (essentialsPlugin instanceof Essentials) {
@@ -65,6 +70,15 @@ public final class Teto extends JavaPlugin {
             log(SEVERE, "Essentials plugin not found!");
             return false;
         }
+    }
+
+    // Getters
+//    public static Essentials getEssentials() {    // Unused
+//        return essentials;
+//    }
+
+    public TownDecay getTownDecay() {
+        return townDecay;
     }
 
     @Override

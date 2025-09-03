@@ -3,6 +3,8 @@ teto:
   enabled: true
 
 town-decay:
+  # Enable or disable automatic town decay. Towns will be put into the ruined state
+  # after <decay-duration-days> of inactivity.
   enabled: false
   # How long a town mayer needs to be offline for before a town is set to ruins.
   decay-duration-days: 90
