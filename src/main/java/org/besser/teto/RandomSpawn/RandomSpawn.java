@@ -1,6 +1,7 @@
 package org.besser.teto.RandomSpawn;
 
 import com.earth2me.essentials.Essentials;
+import org.besser.teto.Teto;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -9,27 +10,25 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
 import static org.besser.teto.DIETLogger.*;
-//import org.besser.teto.RandomSpawn.SpawnFinder;
 
 import java.io.File;
 import java.util.List;
 import java.util.Random;
 
 public class RandomSpawn implements Listener {
+    private final Teto plugin;
+    private final Essentials essentials;
     private final YamlConfiguration spawnConfig;
     private final World world;
-    private final JavaPlugin plugin;
-    private final Essentials essentials;
     private boolean essOverriding = false;
 
-    public RandomSpawn(JavaPlugin plugin, Essentials essentials) {
+    public RandomSpawn(Teto plugin, Essentials ess) {
         this.plugin = plugin;
         this.world = Bukkit.getWorlds().get(0); // Might cause issues if using BungeeCord. Should use getWorld({world name set in config})
-        this.essentials = essentials;
+        this.essentials = ess;
 
         File configFile = new File(plugin.getDataFolder(), "random_spawn_locations.yml");
         if (!configFile.exists()) {
@@ -45,6 +44,8 @@ public class RandomSpawn implements Listener {
             log(SEVERE, "[Random spawn] Essentials is overriding spawn join priority (" + essSpawnJoinPriority + "). TETO random spawns will not work.");
             this.essOverriding = true;
         }
+
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     // TODO: also handle destroyed beds or unset spawn location

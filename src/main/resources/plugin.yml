@@ -8,14 +8,21 @@ website: https://github.com/besser435/TEAW-Tools
 authors: [besser]
 depend: [Towny, Essentials]
 
+# TODO: clean these up into something that makes more sense
 permissions:
-  teto.decay:
+  # Admin/test perms
+  teto.towny.decay:
     description: Allows running the town decay command
     default: op
 
   teto.heal:
     description: Allows healing players
     default: op
+
+  # Player perms
+  teto.towny.nation.outlaw:
+    description: Outlaw a player across all towns in the nation
+    default: true
 
 commands:
   teto:

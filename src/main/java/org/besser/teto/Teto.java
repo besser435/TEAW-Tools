@@ -51,7 +51,6 @@ public final class Teto extends JavaPlugin {
         if (isRandomSpawnsEnabled) {
             SpawnFinder.loadConfig(getConfig());
             RandomSpawn randomSpawn = new RandomSpawn(this, essentials);
-            getServer().getPluginManager().registerEvents(randomSpawn, this);
         }
 
         // Set up commands (reminder, needs to happen after objects are initialized)

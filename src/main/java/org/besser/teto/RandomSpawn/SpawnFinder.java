@@ -12,8 +12,6 @@ import java.util.List;
 
 import static org.besser.teto.DIETLogger.*;
 
-
-
 public class SpawnFinder {
     private static final Set<Material> allowedBlocks = new HashSet<>();
     private static final Set<Tag<Material>> allowedTags = new HashSet<>();
