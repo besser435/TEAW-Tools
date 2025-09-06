@@ -1,10 +1,14 @@
 package org.besser.teto.Commands.Tests;
 
 import org.besser.teto.Commands.BaseCommand;
+import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 public class HealCmd extends BaseCommand {
@@ -18,9 +22,10 @@ public class HealCmd extends BaseCommand {
         super("heal",
             "teto.heal",
             "Heal yourself or another player.",
-            "/teto heal [player]",
+            "/teto heal <player>",
             false,
-            false);
+            false
+        );
     }
 
     @Override
@@ -51,5 +56,19 @@ public class HealCmd extends BaseCommand {
         }
 
         return true;
+    }
+
+    @Override
+    public List<String> tabComplete(CommandSender sender, String alias, String[] args) {
+        List<String> matches = new ArrayList<>();
+
+        String partial = args[0].toLowerCase();
+
+        Bukkit.getOnlinePlayers().stream()
+                .map(Player::getName)
+                .filter(name -> name.toLowerCase().startsWith(partial))
+                .forEach(matches::add);
+
+        return matches;
     }
 }

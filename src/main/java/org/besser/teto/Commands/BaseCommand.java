@@ -4,6 +4,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.ChatColor;
 
+import java.util.Collections;
+import java.util.List;
+
 public abstract class BaseCommand {
     protected final String name;
     protected final String permission;
@@ -22,6 +25,8 @@ public abstract class BaseCommand {
     }
 
     public abstract boolean execute(CommandSender sender, String[] args);
+
+    public List<String> tabComplete(CommandSender sender, String alias, String[] args) {return Collections.emptyList();}
 
     public String getName() { return name; }
     public String getPermission() { return permission; }

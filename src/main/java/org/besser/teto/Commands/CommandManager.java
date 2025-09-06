@@ -2,6 +2,8 @@ package org.besser.teto.Commands;
 
 import org.besser.teto.Commands.Tests.HealCmd;
 import org.besser.teto.Commands.Towny.DecayTownsCmd;
+import org.besser.teto.Commands.Towny.NationOutlawCmd;
+import org.besser.teto.Commands.Towny.TownyCommandAdapter;
 import org.besser.teto.Teto;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -173,9 +175,13 @@ public class CommandManager implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         List<String> completions = new ArrayList<>();
+        if (args.length == 0) {
+            return Collections.emptyList();
+        }
 
         if (args.length == 1) {
             String input = args[0].toLowerCase();
+            List<String> completions = new ArrayList<>();
 
             // Tab complete command names
             for (String cmdName : commands.keySet()) {
@@ -192,9 +198,18 @@ public class CommandManager implements CommandExecutor, TabCompleter {
             if ("cancel".startsWith(input)) {
                 completions.add("cancel");
             }
+
+            return completions;
         }
 
-        return completions;
+        // Base command class completions
+        BaseCommand cmd = commands.get(args[0].toLowerCase());
+        if (cmd != null && cmd.hasPermission(sender)) {
+            String[] subArgs = Arrays.copyOfRange(args, 1, args.length);
+            return cmd.tabComplete(sender, alias, subArgs);
+        }
+
+        return Collections.emptyList();
     }
 
     private void showHelp(CommandSender sender) {

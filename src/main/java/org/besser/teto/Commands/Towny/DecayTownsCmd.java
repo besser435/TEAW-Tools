@@ -11,7 +11,7 @@ public class DecayTownsCmd extends BaseCommand {
 
     public DecayTownsCmd(Teto plugin) {
         super("decay",
-            "teto.decay",
+            "teto.towny.decay",
             "Ruins all inactive towns and sends an alert to towns that will become inactive soon.",
             "/teto decay",
             false,
