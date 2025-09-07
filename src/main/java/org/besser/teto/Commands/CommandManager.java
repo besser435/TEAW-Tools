@@ -40,11 +40,12 @@ public class CommandManager implements CommandExecutor, TabCompleter {
     }
 
     public void registerCommands() {
-
-        // Check if commands are enabled and register them
+        // Register normal commands
         registerCommand(new HealCmd());
         if (plugin.getTownDecay() != null) registerCommand(new DecayTownsCmd(plugin));
-        //registerCommand(new NationOutlawCmd());
+
+        // Register custom Towny extension commands
+        TownyCommandAdapter.registerNationSubCommand("outlaw", new NationOutlawCmd());
 
         // Register the main command executor
         Objects.requireNonNull(plugin.getCommand("teto")).setExecutor(this);
@@ -174,7 +175,6 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        List<String> completions = new ArrayList<>();
         if (args.length == 0) {
             return Collections.emptyList();
         }
@@ -206,7 +206,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
         BaseCommand cmd = commands.get(args[0].toLowerCase());
         if (cmd != null && cmd.hasPermission(sender)) {
             String[] subArgs = Arrays.copyOfRange(args, 1, args.length);
-            return cmd.tabComplete(sender, alias, subArgs);
+            return cmd.customTabComplete(sender, alias, subArgs);
         }
 
         return Collections.emptyList();

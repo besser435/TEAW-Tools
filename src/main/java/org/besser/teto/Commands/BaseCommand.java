@@ -26,7 +26,7 @@ public abstract class BaseCommand {
 
     public abstract boolean execute(CommandSender sender, String[] args);
 
-    public List<String> tabComplete(CommandSender sender, String alias, String[] args) {return Collections.emptyList();}
+    public List<String> customTabComplete(CommandSender sender, String alias, String[] args) {return Collections.emptyList();}
 
     public String getName() { return name; }
     public String getPermission() { return permission; }

@@ -59,16 +59,16 @@ public class HealCmd extends BaseCommand {
     }
 
     @Override
-    public List<String> tabComplete(CommandSender sender, String alias, String[] args) {
-        List<String> matches = new ArrayList<>();
+    public List<String> customTabComplete(CommandSender sender, String alias, String[] args) {
+        if (args.length == 1) { // Only complete the first arg
+            String partial = args[0].toLowerCase();
 
-        String partial = args[0].toLowerCase();
-
-        Bukkit.getOnlinePlayers().stream()
-                .map(Player::getName)
-                .filter(name -> name.toLowerCase().startsWith(partial))
-                .forEach(matches::add);
-
-        return matches;
+            return Bukkit.getOnlinePlayers().stream()
+                    .map(Player::getName)
+                    .filter(name -> name.toLowerCase().startsWith(partial))
+                    .limit(50)
+                    .toList();
+        }
+        return Collections.emptyList();
     }
 }
