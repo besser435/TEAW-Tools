@@ -2,6 +2,7 @@ package org.besser.teto.Commands;
 
 import org.besser.teto.Commands.Tests.HealCmd;
 import org.besser.teto.Commands.Towny.DecayTownsCmd;
+import org.besser.teto.Commands.Towny.MayorReplaceCmd;
 import org.besser.teto.Commands.Towny.NationOutlawCmd;
 import org.besser.teto.Commands.Towny.TownyCommandAdapter;
 import org.besser.teto.Teto;
@@ -46,6 +47,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 
         // Register custom Towny extension commands
         TownyCommandAdapter.registerNationSubCommand("outlaw", new NationOutlawCmd());
+        TownyCommandAdapter.registerNationSubCommand("mayor", new MayorReplaceCmd());
 
         // Register the main command executor
         Objects.requireNonNull(plugin.getCommand("teto")).setExecutor(this);

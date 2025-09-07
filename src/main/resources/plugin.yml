@@ -24,6 +24,10 @@ permissions:
     description: Outlaw a player across all towns in the nation
     default: true
 
+  teto.towny.nation.mayor_replace:
+    description: Replace the mayor of a town with another resident
+    default: true
+
 commands:
   teto:
     description: Main TETO command
