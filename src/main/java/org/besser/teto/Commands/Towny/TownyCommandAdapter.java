@@ -10,8 +10,6 @@ import org.bukkit.command.TabCompleter;
 import java.util.Collections;
 import java.util.List;
 
-import static org.besser.teto.DIETLogger.log;
-
 /*
  TETO uses the /teto prefix. But if we want to add onto Towny, we don't want that prefix.
  Towny has an API to let you register our own commands. It expects a commandExecutor, but we have our own custom one.

@@ -17,10 +17,10 @@ import java.util.List;
 
 public class NationOutlawCmd extends BaseCommand implements TownyCommandAdapter.TabCompletable {
     public NationOutlawCmd() {
-        super("outlaw add",
+        super("outlaw",
             "teto.towny.nation.outlaw",    // horrible
             "Outlaw a player across all towns in the nation. Must be a nation leader to run.",
-            "/n outlaw <player>",  // TODO: make it not require the teto command. Use Towny's /n command.
+            "/n outlaw <player>",
             true,
             false
         );
@@ -31,11 +31,8 @@ public class NationOutlawCmd extends BaseCommand implements TownyCommandAdapter.
         // Ensure command is valid
         if (!isPlayer(sender)) {
             sendError(sender, "Command must be run by a player.");
-
             return true;
         }
-
-        Player playerSender = (Player) sender;
 
         if (!hasPermission(sender)) {   // This should not happen, as everyone should have permissions.
             sendError(sender, "You do not have permission to use this command.");
@@ -45,23 +42,25 @@ public class NationOutlawCmd extends BaseCommand implements TownyCommandAdapter.
         if (args.length == 0) {
             sender.sendMessage(ChatColor.YELLOW + "/n " + getName() + ChatColor.WHITE + " - " + getDescription());
             sender.sendMessage(ChatColor.GRAY + "Usage: " + getUsage());
-
             return true;
         }
 
         Resident targetResident = TownyAPI.getInstance().getResident(args[0]);
+
         if (targetResident == null) {
             sendError(sender, "Player '" + args[0] + "' could not be found in Towny.");
             return true;
         }
 
-        // Run checks before executing
+        // Run sender checks
+        Player playerSender = (Player) sender;
         Resident senderResident = TownyAPI.getInstance().getResident(playerSender.getUniqueId());
 
         if (senderResident == null) {
             return true;
         }
 
+        // Fix duplicated code fragment. Make helper class?
         Nation senderNation;
         try {
             senderNation = senderResident.getNation();
@@ -84,18 +83,20 @@ public class NationOutlawCmd extends BaseCommand implements TownyCommandAdapter.
             } catch (com.palmergames.bukkit.towny.exceptions.AlreadyRegisteredException e) {
                 // Might happen if you outlaw a resident who is the mayor of a town in your nation
                 sendError(sender, "Failed to outlaw " + targetResident.getName() + " in " + town.getName() + ". Are they a mayor in your nation?");
+                // Don't return yet, try remaining towns.
             }
         }
 
-        sendSuccess(sender, ChatColor.RED + targetResident.getName() +ChatColor.GREEN + " has been outlawed in all of your nation's towns.");
-
+        sendSuccess(sender, ChatColor.RED + targetResident.getName() + ChatColor.GREEN +
+                " has been outlawed in all of your nation's towns.");
         return true;
     }
 
    @Override
     public List<String> customTownyTabComplete(CommandSender sender, String alias, String[] args) {
+       String partial = args[0].toLowerCase();
+
         if (args.length == 1) { // Only complete the first arg
-            String partial = args[0].toLowerCase();
             return TownyAPI.getInstance().getResidents().stream()
                     .map(Resident::getName)
                     .filter(name -> name.toLowerCase().startsWith(partial))
