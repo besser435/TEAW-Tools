@@ -214,6 +214,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
         return Collections.emptyList();
     }
 
+    // Does not show Towny commands fix later by adding them to the `commands` map (might break stuff so be careful).
     private void showHelp(CommandSender sender) {
         sender.sendMessage(ChatColor.GOLD + "=== Available Commands ===");
         for (BaseCommand cmd : commands.values()) {

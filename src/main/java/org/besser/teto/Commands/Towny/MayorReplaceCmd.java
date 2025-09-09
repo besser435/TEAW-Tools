@@ -17,11 +17,10 @@ import java.util.Objects;
 import static org.besser.teto.DIETLogger.*;
 
 public class MayorReplaceCmd extends BaseCommand implements TownyCommandAdapter.TabCompletable {
-
     public MayorReplaceCmd() {
         super("replace",
             "teto.towny.nation.mayor_replace",
-            "Replace the mayor of a town with another resident.",
+            "Replace the mayor of a town with another resident. Must be a nation leader to run.",
             "/n mayor replace <town> <resident>",
             true,
             false
@@ -30,7 +29,18 @@ public class MayorReplaceCmd extends BaseCommand implements TownyCommandAdapter.
 
     @Override
     public boolean execute(CommandSender sender, String[] args) {
+        // The "replace" sub-command is technically passed as an arg here.
+        // This allows it to come after the initial (mayor) command, as the custom Towny command API
+        // doesn't support adding sub-commands, only the main one.
+        // Note that this shifts all args forwards one.
+
         // Ensure command is valid
+        if (args.length < 3 || !args[0].equalsIgnoreCase("replace")) {
+            sender.sendMessage(ChatColor.YELLOW + "/n mayor " + getName() + ChatColor.WHITE + " - " + getDescription());
+            sender.sendMessage(ChatColor.GRAY + "Usage: " + getUsage());
+            return true;
+        }
+
         if (!isPlayer(sender)) {
             sendError(sender, "Only players can run this command.");
             return true;
@@ -41,14 +51,8 @@ public class MayorReplaceCmd extends BaseCommand implements TownyCommandAdapter.
             return true;
         }
 
-        if (args.length < 2) {
-            sender.sendMessage(ChatColor.YELLOW + "/n " + getName() + ChatColor.WHITE + " - " + getDescription());
-            sender.sendMessage(ChatColor.GRAY + "Usage: " + getUsage());
-            return true;
-        }
-
-        String townName = args[0];
-        String newMayorName = args[1];
+        String townName = args[1];
+        String newMayorName = args[2];
 
         // Run args checks
         Player playerSender = (Player) sender;
@@ -85,10 +89,13 @@ public class MayorReplaceCmd extends BaseCommand implements TownyCommandAdapter.
             return true;
         }
 
-        // Ensure the target resident is in the town
-        // TODO: tab completer should only return residents in the town.
+        if (!senderNation.hasTown(town)) {
+            sendError(sender, town.getName() + " is not a member of your nation.");
+            return true;
+        }
+
         if (!newMayor.hasTown() || !Objects.equals(newMayor.getTownOrNull(), town)) {
-            sendError(sender, "Resident '" + newMayorName + "' is not a member of town " + town.getName() + ".");
+            sendError(sender, newMayorName + " is not a citizen of " + town.getName() + ".");
             return true;
         }
 
@@ -109,18 +116,39 @@ public class MayorReplaceCmd extends BaseCommand implements TownyCommandAdapter.
 
     @Override
     public List<String> customTownyTabComplete(CommandSender sender, String alias, String[] args) {
-        String partial = args[0].toLowerCase();
-        Town town = TownyAPI.getInstance().getTown(args[1]);    // might be null
+        if (!(sender instanceof Player player)) {
+            return Collections.emptyList();
+        }
 
-        // intelliJ says Condition 'args. length == 1' is always 'false'
-        if (args.length == 1) {     // Town
-            return TownyAPI.getInstance().getTowns().stream()
+        Resident senderResident = TownyAPI.getInstance().getResident(player.getUniqueId());
+        if (senderResident == null) {
+            return Collections.emptyList();
+        }
+
+        Nation senderNation;
+        try {
+            senderNation = senderResident.getNation();
+        } catch (TownyException e) {
+            return Collections.emptyList();
+        }
+
+        // See the first comment in the execute method for more details.
+        if (args.length == 1) {
+            return List.of("replace");
+        }
+
+        if (args.length == 2 && args[0].equalsIgnoreCase("replace")) {  // Suggest town
+            String partial = args[1].toLowerCase();
+            return senderNation.getTowns().stream()
                     .map(Town::getName)
                     .filter(name -> name.toLowerCase().startsWith(partial))
                     .limit(50)
                     .toList();
+        }
 
-        } else if (args.length == 2) {      // New mayor
+        if (args.length == 3 && args[0].equalsIgnoreCase("replace")) {  // Suggest new mayor
+            String partial = args[2].toLowerCase();
+            Town town = TownyAPI.getInstance().getTown(args[1]);
             if (town == null) return Collections.emptyList();
 
             return town.getResidents().stream()
@@ -128,7 +156,6 @@ public class MayorReplaceCmd extends BaseCommand implements TownyCommandAdapter.
                     .filter(name -> name.toLowerCase().startsWith(partial))
                     .limit(50)
                     .toList();
-
         }
         return Collections.emptyList();
     }

@@ -94,9 +94,13 @@ public class NationOutlawCmd extends BaseCommand implements TownyCommandAdapter.
 
    @Override
     public List<String> customTownyTabComplete(CommandSender sender, String alias, String[] args) {
+       if (!(sender instanceof Player player)) {    // Just in case the console gets here
+           return Collections.emptyList();
+       }
+
        String partial = args[0].toLowerCase();
 
-        if (args.length == 1) { // Only complete the first arg
+        if (args.length == 1) { // Suggest player
             return TownyAPI.getInstance().getResidents().stream()
                     .map(Resident::getName)
                     .filter(name -> name.toLowerCase().startsWith(partial))
