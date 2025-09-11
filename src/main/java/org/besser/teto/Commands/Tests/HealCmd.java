@@ -13,10 +13,7 @@ import java.util.Objects;
 
 public class HealCmd extends BaseCommand {
 
-
-    // TODO fix bug where there is no autocomplete for players on second arg (/teto heal <player> <-- HERE
-    // Might be in abstract class.
-
+    // This is just a test command for dev purposes.
 
     public HealCmd() {
         super("heal",

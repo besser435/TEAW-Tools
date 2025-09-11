@@ -14,6 +14,9 @@ import java.util.List;
  TETO uses the /teto prefix. But if we want to add onto Towny, we don't want that prefix.
  Towny has an API to let you register our own commands. It expects a commandExecutor, but we have our own custom one.
  This adapter lets us register custom Towny commands with its own commandExecuter. It just wraps baseCommand in an executer.
+
+
+ This whole class is fucky and I have no idea how it works and I made it.
  */
 
 public class TownyCommandAdapter implements CommandExecutor, TabCompleter {
