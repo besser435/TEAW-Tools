@@ -28,6 +28,11 @@ permissions:
     description: Replace the mayor of a town with another resident
     default: true
 
+  teto.towny.nation.mapcolor:
+    description: Sets the town color on the map for all towns in the nation
+    default: true
+
+
 commands:
   teto:
     description: Main TETO command
