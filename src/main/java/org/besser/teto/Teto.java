@@ -9,6 +9,8 @@ import org.besser.teto.TownDecay.TownDecay;
 import org.besser.teto.TownDecay.TownDecayListener;
 import org.besser.teto.TownDecay.TownScreenListener;
 
+import org.besser.teto.Commands.Towny.MapColor.TownColorChangeListener;
+
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -24,6 +26,14 @@ public final class Teto extends JavaPlugin {
         DIETLogger.initialize(this);
 
         saveDefaultConfig();    // Fails silently if the config.yml already exists.
+
+
+        // debug to try to find the right event. change later.
+        getServer().getPluginManager().registerEvents(new TownColorChangeListener(), this);
+
+
+
+
 
         boolean isEnabledInConfig = getConfig().getBoolean("teto.enabled", true);
         if (!isEnabledInConfig) {

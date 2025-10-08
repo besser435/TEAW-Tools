@@ -85,6 +85,8 @@ public class RandomSpawn implements Listener {
         Random random = new Random();
 
         for (int i = 0; i < spawnList.size(); i++) {
+            // TODO still using debug locations.
+            // change to like 20 max iterations or something depending on how long each iter takes.
             int index = random.nextInt(spawnList.size());
             Object entry = spawnList.get(index);
 
@@ -96,7 +98,13 @@ public class RandomSpawn implements Listener {
 
                     Location spawnLoc = new Location(world, x + 0.5, y + 1, z + 0.5);
 
+                    long startTime = System.currentTimeMillis();
+
                     if (!SpawnFinder.isSafe(spawnLoc)) continue;
+
+                    long endTime = System.currentTimeMillis();
+                    log(INFO, "[Random spawn] Took " + (endTime - startTime) + "ms to verify spawn candidate");
+                    // Note this does not include the total time to find a spawn, just the one check.
 
                     return spawnLoc;
                 } catch (Exception e) {

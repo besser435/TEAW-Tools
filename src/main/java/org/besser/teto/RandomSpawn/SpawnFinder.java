@@ -94,8 +94,6 @@ public class SpawnFinder {
         boolean isWilderness = towny.isWilderness(spawnLoc);
         if (!isWilderness) return false;
 
-        // Ensure tree/logs within 160 blocks, probably too expensive to do realistically
-
         // Valid blocks
         if (!allowedBlocks.contains(belowType) && allowedTags.stream().noneMatch(tag -> tag.isTagged(belowType))) {
             return false;
