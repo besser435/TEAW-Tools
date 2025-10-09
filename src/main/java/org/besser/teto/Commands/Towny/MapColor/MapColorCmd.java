@@ -5,6 +5,7 @@ import com.palmergames.bukkit.towny.exceptions.TownyException;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
+import com.palmergames.bukkit.towny.object.metadata.BooleanDataField;
 import org.besser.teto.Commands.Towny.TownyCommandAdapter;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -24,7 +25,7 @@ public class MapColorCmd extends BaseCommand implements TownyCommandAdapter.TabC
         super("mapcolor",
                 "teto.towny.nation.mapcolor",    // horrible
                 "Sets a nation-wide map color for all towns, or locks town color changes to only the nation leader.",
-                "/n mapcolor <color name or hex code> || /n mapcolor lock",
+                "/n mapcolor <color name or hex code> or /n mapcolor lock",
                 true,
                 false
         );
@@ -77,7 +78,7 @@ public class MapColorCmd extends BaseCommand implements TownyCommandAdapter.TabC
         String sub = args[0].toLowerCase();
         switch (sub) {
             case "lock" -> handleLockCommand(sender, senderNation);
-            case "mapcolor" -> handleSetColorCommand(sender, senderNation, sub);
+            case "set" -> handleSetColorCommand(sender, senderNation, sub);
             default -> {
                 sender.sendMessage(ChatColor.YELLOW + "/n " + getName() + ChatColor.WHITE + " - " + getDescription());
                 sender.sendMessage(ChatColor.GRAY + "Usage: " + getUsage());
@@ -88,23 +89,35 @@ public class MapColorCmd extends BaseCommand implements TownyCommandAdapter.TabC
     }
 
     private void handleLockCommand(CommandSender sender, Nation nation) {
-        // TODO: this entire method.
-        // See https://github.com/TownyAdvanced/Towny/wiki/Configuring-Metadata-in-Towny-objects.
-//        boolean currentlyLocked = nation.hasMeta("mapcolor_locked") && Boolean.TRUE.equals(nation.getMetadata("mapcolor_locked"));
-//
-//        nation.addMetaData("mapcolor_locked", !currentlyLocked);
-//
-//        if (!currentlyLocked) {
-//            sendSuccess(sender, "Town color changes are now locked. Only the nation leader can change them.");
-//        } else {
-//            sendSuccess(sender, "Town color changes are now unlocked. Mayors can now change their own town colors.");
-//        }
+        final String MAPCOLOR_LOCK_KEY = "teto_mapcolor_locked";
+
+        BooleanDataField lockField = nation.getMetadata(MAPCOLOR_LOCK_KEY, BooleanDataField.class);
+
+        if (lockField == null) {
+            lockField = new BooleanDataField(MAPCOLOR_LOCK_KEY, false);
+            nation.addMetaData(lockField);
+        }
+
+        // Flip value
+        boolean currentlyLocked = lockField.getValue();
+        boolean nowLocked = !currentlyLocked;
+        lockField.setValue(nowLocked);
+        nation.save();
+
+        // Send message
+        String message = nowLocked
+                ? "Town map color changes are now" + ChatColor.RED + " locked."
+                + ChatColor.GREEN + " Only the nation leader can change them."
+
+                : "Town map color changes are now" + ChatColor.DARK_GREEN + " unlocked."
+                + ChatColor.GREEN + " Mayors can now freely change their map colors.";
+        sendSuccess(sender, message);
     }
 
     private void handleSetColorCommand(CommandSender sender, Nation nation, String colorArg) {
         Map<String, String> allowedColors = TownySettings.getTownColorsMap();
 
-        if (!allowedColors.containsKey(colorArg)) {
+        if (!allowedColors.containsKey(colorArg.toLowerCase())) {
             // Kind of a lot of options, maybe dont include them and just rely on tab complete.
             // TODO allow custom hex codes.
             sendError(sender, "Invalid color! Allowed colors: " + String.join(", ", allowedColors.keySet()));
