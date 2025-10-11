@@ -51,7 +51,7 @@ public abstract class BaseCommand {
         sender.sendMessage(ChatColor.GREEN + message);
     }
 
-    protected boolean isPlayer(CommandSender sender) {  // TODO: IntelliJ is complaining, real?
+    protected boolean isPlayer(CommandSender sender) {
         return sender instanceof Player;
     }
 

@@ -5,9 +5,6 @@ import com.earth2me.essentials.Essentials;
 import org.besser.teto.Commands.CommandManager;
 import org.besser.teto.RandomSpawn.RandomSpawn;
 import org.besser.teto.RandomSpawn.SpawnFinder;
-import org.besser.teto.TownDecay.TownDecay;
-import org.besser.teto.TownDecay.TownDecayListener;
-import org.besser.teto.TownDecay.TownScreenListener;
 
 import org.besser.teto.Commands.Towny.MapColor.TownColorChangeListener;
 
@@ -19,7 +16,6 @@ import static org.besser.teto.DIETLogger.*;
 
 public final class Teto extends JavaPlugin {
     private static Essentials essentials = null;
-    private static TownDecay townDecay = null;
 
     @Override
     public void onEnable() {
@@ -30,9 +26,6 @@ public final class Teto extends JavaPlugin {
 
         // debug to try to find the right event. change later.
         getServer().getPluginManager().registerEvents(new TownColorChangeListener(), this);
-
-
-
 
 
         boolean isEnabledInConfig = getConfig().getBoolean("teto.enabled", true);
@@ -46,14 +39,6 @@ public final class Teto extends JavaPlugin {
             log(SEVERE, "Required dependencies are missing. TETO will not start.");
             getServer().getPluginManager().disablePlugin(this);
             return;
-        }
-
-        // Town Decay
-        boolean isTownDecayEnabled = getConfig().getBoolean("town-decay.enabled", false);
-        if (isTownDecayEnabled) {
-            townDecay = new TownDecay(this);
-            getServer().getPluginManager().registerEvents(new TownDecayListener(townDecay), this);
-            getServer().getPluginManager().registerEvents(new TownScreenListener(), this);
         }
 
         // Random spawns
@@ -85,10 +70,6 @@ public final class Teto extends JavaPlugin {
 //    public static Essentials getEssentials() {    // Unused
 //        return essentials;
 //    }
-
-    public TownDecay getTownDecay() {
-        return townDecay;
-    }
 
     @Override
     public void onDisable() {
