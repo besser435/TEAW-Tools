@@ -24,8 +24,8 @@ public class MapColorCmd extends BaseCommand implements TownyCommandAdapter.TabC
     public MapColorCmd() {
         super("mapcolor",
                 "teto.towny.nation.mapcolor",    // horrible
-                "Sets a nation-wide map color for all towns, or locks town color changes to only the nation leader.",
-                "/n mapcolor <color name or hex code> or /n mapcolor lock",
+                "Sets a nation-wide web-map color for all towns, or locks town color changes so only the nation leader can change them.",
+                "/n mapcolor <color name/hex code> or /n mapcolor lock",
                 true,
                 false
         );
@@ -57,7 +57,6 @@ public class MapColorCmd extends BaseCommand implements TownyCommandAdapter.TabC
             sendError(sender, "You could not be found in Towny.");  // janky wording, fix or remove error.
             return true;
         }
-
 
         // Ensure player is in a nation
         // Fix duplicated code fragment. Make helper class?
