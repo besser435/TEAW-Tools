@@ -11,10 +11,6 @@ depend: [Towny, Essentials]
 # TODO: clean these up into something that makes more sense
 permissions:
   # Admin/test perms
-  teto.towny.decay:
-    description: Allows running the town decay command
-    default: op
-
   teto.heal:
     description: Allows healing players
     default: op
@@ -32,15 +28,8 @@ permissions:
     description: Sets the town color on the map for all towns in the nation
     default: true
 
-
 commands:
   teto:
     description: Main TETO command
     usage: /<command> <subcommand>
     aliases: [tt]
-#  decaycheck:
-#    description: Manually runs the town decay check and ruins inactive towns
-#    usage: /decaycheck
-#    permission: teto.decay
-
-

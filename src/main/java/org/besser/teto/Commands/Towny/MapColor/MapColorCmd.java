@@ -17,15 +17,16 @@ import org.bukkit.entity.Player;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import static org.besser.teto.DIETLogger.*;
 
 public class MapColorCmd extends BaseCommand implements TownyCommandAdapter.TabCompletable {
     public MapColorCmd() {
         super("mapcolor",
-                "teto.towny.nation.mapcolor",    // horrible
+                "teto.towny.nation.mapcolor",
                 "Sets a nation-wide web-map color for all towns, or locks town color changes so only the nation leader can change them.",
-                "/n mapcolor <color name/hex code> or /n mapcolor lock",
+                "/n mapcolor set <color> or /n mapcolor lock",
                 true,
                 false
         );
@@ -50,16 +51,15 @@ public class MapColorCmd extends BaseCommand implements TownyCommandAdapter.TabC
             return true;
         }
 
+        // Run sender checks
+        // Fix duplicated code fragment. Make helper class?
         Player playerSender = (Player) sender;
         Resident senderResident = TownyAPI.getInstance().getResident(playerSender);
 
         if (senderResident == null) {
-            sendError(sender, "You could not be found in Towny.");  // janky wording, fix or remove error.
             return true;
         }
 
-        // Ensure player is in a nation
-        // Fix duplicated code fragment. Make helper class?
         Nation senderNation;
         try {
             senderNation = senderResident.getNation();
@@ -73,11 +73,17 @@ public class MapColorCmd extends BaseCommand implements TownyCommandAdapter.TabC
             return true;
         }
 
-        // Determine subcommand
+        // Determine subcommand and call proper method
         String sub = args[0].toLowerCase();
         switch (sub) {
             case "lock" -> handleLockCommand(sender, senderNation);
-            case "set" -> handleSetColorCommand(sender, senderNation, sub);
+            case "set" -> {
+                if (args.length < 2) {  // Prevent towny out of bounds error
+                    sendError(sender, "Usage: /n mapcolor set <color>");
+                    return true;
+                }
+                handleSetColorCommand(sender, senderNation, args[1]);
+            }
             default -> {
                 sender.sendMessage(ChatColor.YELLOW + "/n " + getName() + ChatColor.WHITE + " - " + getDescription());
                 sender.sendMessage(ChatColor.GRAY + "Usage: " + getUsage());
@@ -116,14 +122,16 @@ public class MapColorCmd extends BaseCommand implements TownyCommandAdapter.TabC
     private void handleSetColorCommand(CommandSender sender, Nation nation, String colorArg) {
         Map<String, String> allowedColors = TownySettings.getTownColorsMap();
 
+        log(INFO, colorArg.toLowerCase());
+
         if (!allowedColors.containsKey(colorArg.toLowerCase())) {
-            // Kind of a lot of options, maybe dont include them and just rely on tab complete.
             // TODO allow custom hex codes.
+            // Kind of a lot of options, maybe dont include them and just rely on tab complete.
             sendError(sender, "Invalid color! Allowed colors: " + String.join(", ", allowedColors.keySet()));
             return;
         }
 
-        String hex = allowedColors.get(colorArg);
+        String hex = allowedColors.get(colorArg.toLowerCase());
 
         // Apply color to all towns in the nation
         for (Town town : nation.getTowns()) {
@@ -140,40 +148,32 @@ public class MapColorCmd extends BaseCommand implements TownyCommandAdapter.TabC
 
     @Override
     public List<String> customTownyTabComplete(CommandSender sender, String alias, String[] args) {
-//        if (!(sender instanceof Player player)) {
-//            return Collections.emptyList();
-//        }
-//
-//        Resident senderResident = TownyAPI.getInstance().getResident(player.getUniqueId());
-//        if (senderResident == null) {
-//            return Collections.emptyList();
-//        }
-//
-//        // See the first comment in the execute method for more details.
-//        if (args.length == 1) {
-//            return List.of("replace");
-//        }
-//
-//        if (args.length == 2 && args[0].equalsIgnoreCase("replace")) {  // Suggest town
-//            String partial = args[1].toLowerCase();
-//            return senderNation.getTowns().stream()
-//                    .map(Town::getName)
-//                    .filter(name -> name.toLowerCase().startsWith(partial))
-//                    .limit(50)
-//                    .toList();
-//        }
-//
-//        if (args.length == 3 && args[0].equalsIgnoreCase("replace")) {  // Suggest new mayor
-//            String partial = args[2].toLowerCase();
-//            Town town = TownyAPI.getInstance().getTown(args[1]);
-//            if (town == null) return Collections.emptyList();
-//
-//            return town.getResidents().stream()
-//                    .map(Resident::getName)
-//                    .filter(name -> name.toLowerCase().startsWith(partial))
-//                    .limit(50)
-//                    .toList();
-//        }
+        if (!(sender instanceof Player player)) {   // Just in case the console gets here
+            return Collections.emptyList();
+        }
+
+        Resident senderResident = TownyAPI.getInstance().getResident(player.getUniqueId());
+        if (senderResident == null) {
+            return Collections.emptyList();
+        }
+
+        // set || lock
+        if (args.length == 1) {
+            return Stream.of("set", "lock")
+                    .filter(s -> s.startsWith(args[0].toLowerCase()))
+                    .toList();
+        }
+
+        // color
+        if (args.length == 2 && args[0].equalsIgnoreCase("set")) {
+            return TownySettings.getTownColorsMap()
+                    .keySet()
+                    .stream()
+                    .filter(color -> color.startsWith(args[1].toLowerCase()))
+                    .sorted()
+                    .toList();
+        }
+
         return Collections.emptyList();
     }
 }

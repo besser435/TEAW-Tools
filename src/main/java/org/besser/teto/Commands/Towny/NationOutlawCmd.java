@@ -18,11 +18,11 @@ import java.util.List;
 public class NationOutlawCmd extends BaseCommand implements TownyCommandAdapter.TabCompletable {
     public NationOutlawCmd() {
         super("outlaw",
-            "teto.towny.nation.outlaw",    // horrible
+            "teto.towny.nation.outlaw",
             "Outlaw a player across all towns in the nation. Must be a nation leader to run.",
             "/n outlaw <player>",
             true,
-            false
+            true
         );
     }
 
@@ -53,6 +53,7 @@ public class NationOutlawCmd extends BaseCommand implements TownyCommandAdapter.
         }
 
         // Run sender checks
+        // Fix duplicated code fragment. Make helper class?
         Player playerSender = (Player) sender;
         Resident senderResident = TownyAPI.getInstance().getResident(playerSender.getUniqueId());
 
@@ -60,7 +61,6 @@ public class NationOutlawCmd extends BaseCommand implements TownyCommandAdapter.
             return true;
         }
 
-        // Fix duplicated code fragment. Make helper class?
         Nation senderNation;
         try {
             senderNation = senderResident.getNation();
@@ -82,7 +82,8 @@ public class NationOutlawCmd extends BaseCommand implements TownyCommandAdapter.
                 }
             } catch (com.palmergames.bukkit.towny.exceptions.AlreadyRegisteredException e) {
                 // Might happen if you outlaw a resident who is the mayor of a town in your nation
-                sendError(sender, "Failed to outlaw " + targetResident.getName() + " in " + town.getName() + ". Are they a mayor in your nation?");
+                sendError(sender, "Failed to outlaw " + targetResident.getName() + " in " + town.getName() +
+                        ". Are they a mayor of a town in your nation?");
                 // Don't return yet, try remaining towns.
             }
         }

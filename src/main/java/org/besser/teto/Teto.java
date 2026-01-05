@@ -23,11 +23,6 @@ public final class Teto extends JavaPlugin {
 
         saveDefaultConfig();    // Fails silently if the config.yml already exists.
 
-
-        // debug to try to find the right event. change later.
-        getServer().getPluginManager().registerEvents(new TownColorChangeListener(), this);
-
-
         boolean isEnabledInConfig = getConfig().getBoolean("teto.enabled", true);
         if (!isEnabledInConfig) {
             log(WARNING, "TEAW Tools is disabled in config.yml and will not start.");
@@ -52,6 +47,10 @@ public final class Teto extends JavaPlugin {
         CommandManager commandManager = new CommandManager(this);
         commandManager.registerCommands();
         log(INFO, ChatColor.AQUA + "TEAW Tools " + ChatColor.GOLD + "v" + getDescription().getVersion() + ChatColor.RESET + " started!");
+
+        // Set up listeners
+        getServer().getPluginManager().registerEvents(new TownColorChangeListener(), this);
+
     }
 
     // Setup depends
