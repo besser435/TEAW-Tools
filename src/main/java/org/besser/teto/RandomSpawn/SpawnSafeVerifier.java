@@ -12,7 +12,7 @@ import java.util.List;
 
 import static org.besser.teto.DIETLogger.*;
 
-public class SpawnFinder {
+public class SpawnSafeVerifier {
     private static final Set<Material> allowedBlocks = new HashSet<>();
     private static final Set<Tag<Material>> allowedTags = new HashSet<>();
 
@@ -83,6 +83,7 @@ public class SpawnFinder {
         if (belowType == Material.WATER) return false;
 
         // Within world border
+        // Should not happen. RNGs should be limited to inside world border.
         if (x < borderMinX || x > borderMaxX || z < borderMinZ || z > borderMaxZ) {
             return false;
         }

@@ -4,7 +4,8 @@ teto:
 
 random-spawns:
   # Spawn locations are in random_spawn_locations.yml.
-  enabled: true
+  # RANDOM SPAWNS ARE A WIP, DO NOT ENABLE UNLESS TESTING
+  enabled: false
   # Blocks/tags players can spawn on. Uses Spigot material and tag names.
   allowed-spawn-blocks:
     - MOSS_BLOCK

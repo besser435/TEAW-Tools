@@ -94,10 +94,11 @@ public class MayorReplaceCmd extends BaseCommand implements TownyCommandAdapter.
             return true;
         }
 
-        if (!newMayor.hasTown() || !Objects.equals(newMayor.getTownOrNull(), town)) {
-            sendError(sender, newMayorName + " is not a citizen of " + town.getName() + ".");
-            return true;
-        }
+        // Disabled so any member in the nation can be in the new mayor.
+//        if (!newMayor.hasTown() || !Objects.equals(newMayor.getTownOrNull(), town)) {
+//            sendError(sender, newMayorName + " is not a citizen of " + town.getName() + ".");
+//            return true;
+//        }
 
         // Swap mayor
         Resident oldMayor = town.getMayor();

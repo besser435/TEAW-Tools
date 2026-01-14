@@ -4,7 +4,7 @@ import com.earth2me.essentials.Essentials;
 
 import org.besser.teto.Commands.CommandManager;
 import org.besser.teto.RandomSpawn.RandomSpawn;
-import org.besser.teto.RandomSpawn.SpawnFinder;
+import org.besser.teto.RandomSpawn.SpawnSafeVerifier;
 
 import org.besser.teto.Commands.Towny.MapColor.TownColorChangeListener;
 
@@ -39,8 +39,10 @@ public final class Teto extends JavaPlugin {
         // Random spawns
         boolean isRandomSpawnsEnabled = getConfig().getBoolean("random-spawns.enabled", true);
         if (isRandomSpawnsEnabled) {
-            SpawnFinder.loadConfig(getConfig());
-            RandomSpawn randomSpawn = new RandomSpawn(this, essentials);
+            SpawnSafeVerifier.loadConfig(getConfig());
+            new RandomSpawn(this, essentials);
+        } else {
+            log(WARNING, "TETO random spawns are disabled. TETO will not handle player spawns.");;
         }
 
         // Set up commands (reminder, needs to happen after objects are initialized)
@@ -50,7 +52,6 @@ public final class Teto extends JavaPlugin {
 
         // Set up listeners
         getServer().getPluginManager().registerEvents(new TownColorChangeListener(), this);
-
     }
 
     // Setup depends

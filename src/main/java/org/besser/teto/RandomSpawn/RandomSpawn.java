@@ -39,7 +39,6 @@ public class RandomSpawn implements Listener {
         this.spawnConfig = YamlConfiguration.loadConfiguration(configFile);
 
         EventPriority essSpawnJoinPriority = essentials.getSettings().getSpawnJoinPriority();
-        //log(WARNING, "debug, essSpawnJoinPriority = " + essSpawnJoinPriority);
         if (!(essSpawnJoinPriority == null)) {
             log(SEVERE, "[Random spawn] Essentials is overriding spawn join priority (" + essSpawnJoinPriority + "). TETO random spawns will not work.");
             this.essOverriding = true;
@@ -100,7 +99,7 @@ public class RandomSpawn implements Listener {
 
                     long startTime = System.currentTimeMillis();
 
-                    if (!SpawnFinder.isSafe(spawnLoc)) continue;
+                    if (!SpawnSafeVerifier.isSafe(spawnLoc)) continue;
 
                     long endTime = System.currentTimeMillis();
                     log(INFO, "[Random spawn] Took " + (endTime - startTime) + "ms to verify spawn candidate");
