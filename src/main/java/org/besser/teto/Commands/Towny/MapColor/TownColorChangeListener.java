@@ -16,7 +16,7 @@ public class TownColorChangeListener implements Listener {
         String msg = event.getMessage().toLowerCase();
 
         // This is kind of janky because it's a hard coded string, but whatever, it's the best we can do with Towny's API.
-        if (!msg.startsWith("/t set mapcolor")) return;
+        if (!msg.startsWith("/t set mapcolor") || !msg.startsWith("/town set mapcolor")) return;
 
         Player player = event.getPlayer();
         Resident resident = TownyAPI.getInstance().getResident(player);
