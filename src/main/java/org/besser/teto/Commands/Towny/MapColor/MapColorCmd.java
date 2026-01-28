@@ -122,8 +122,6 @@ public class MapColorCmd extends BaseCommand implements TownyCommandAdapter.TabC
     private void handleSetColorCommand(CommandSender sender, Nation nation, String colorArg) {
         Map<String, String> allowedColors = TownySettings.getTownColorsMap();
 
-        log(INFO, colorArg.toLowerCase());
-
         if (!allowedColors.containsKey(colorArg.toLowerCase())) {
             // TODO allow custom hex codes.
             // Kind of a lot of options, maybe dont include them and just rely on tab complete.
