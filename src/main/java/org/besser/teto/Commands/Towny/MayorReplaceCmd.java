@@ -95,6 +95,7 @@ public class MayorReplaceCmd extends BaseCommand implements TownyCommandAdapter.
         }
 
         // Disabled so any member in the nation can be in the new mayor.
+        // TODO: This might cause issues if the mayor is the only resident of a town and they get removed and put into another town
 //        if (!newMayor.hasTown() || !Objects.equals(newMayor.getTownOrNull(), town)) {
 //            sendError(sender, newMayorName + " is not a citizen of " + town.getName() + ".");
 //            return true;

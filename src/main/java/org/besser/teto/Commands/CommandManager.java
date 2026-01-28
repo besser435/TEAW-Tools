@@ -2,7 +2,7 @@ package org.besser.teto.Commands;
 
 import org.besser.teto.Commands.Tests.HealCmd;
 import org.besser.teto.Commands.Towny.MapColor.MapColorCmd;
-//import org.besser.teto.Commands.Towny.MayorReplaceCmd;
+import org.besser.teto.Commands.Towny.MayorReplaceCmd;
 import org.besser.teto.Commands.Towny.NationOutlawCmd;
 import org.besser.teto.Commands.Towny.TownyCommandAdapter;
 import org.besser.teto.Teto;
@@ -46,7 +46,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 
         // Register custom Towny extension commands
         TownyCommandAdapter.registerNationSubCommand("outlaw", new NationOutlawCmd());
-        //TownyCommandAdapter.registerNationSubCommand("mayor", new MayorReplaceCmd()); // TODO: add config option to disable
+        TownyCommandAdapter.registerNationSubCommand("mayor", new MayorReplaceCmd()); // TODO: add config option to disable
         TownyCommandAdapter.registerNationSubCommand("mapcolor", new MapColorCmd());
 
         // Register the main command executor

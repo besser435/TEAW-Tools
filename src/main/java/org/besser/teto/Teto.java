@@ -3,6 +3,7 @@ package org.besser.teto;
 import com.earth2me.essentials.Essentials;
 
 import org.besser.teto.Commands.CommandManager;
+import org.besser.teto.Commands.Towny.RequireNation.ForceNationListener;
 import org.besser.teto.RandomSpawn.RandomSpawn;
 import org.besser.teto.RandomSpawn.SpawnSafeVerifier;
 
@@ -52,6 +53,7 @@ public final class Teto extends JavaPlugin {
 
         // Set up listeners
         getServer().getPluginManager().registerEvents(new TownColorChangeListener(), this);
+        getServer().getPluginManager().registerEvents(new ForceNationListener(this), this);
     }
 
     // Setup depends
