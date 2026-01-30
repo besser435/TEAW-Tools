@@ -14,6 +14,9 @@ permissions:
   teto.heal:
     description: Allows healing players
     default: op
+  teto.towny.townPurge:
+    description: Delete towns who's entire population has not been online for at least one year.
+    default: op
 
   # Player perms
   teto.towny.nation.outlaw:
