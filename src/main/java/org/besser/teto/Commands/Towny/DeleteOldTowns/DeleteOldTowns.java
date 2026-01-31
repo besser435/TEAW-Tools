@@ -47,7 +47,7 @@ public class DeleteOldTowns {
 
         // Delete towns
         if (townsToDelete.isEmpty()) {
-            Bukkit.getLogger().info("[Town Purge] No inactive towns found to delete");
+            log(INFO, "[Town Purge] No inactive towns found to delete");
             return;
         }
 

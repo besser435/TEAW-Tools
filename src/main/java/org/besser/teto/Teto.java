@@ -54,6 +54,7 @@ public final class Teto extends JavaPlugin {
         // Set up listeners
         getServer().getPluginManager().registerEvents(new TownColorChangeListener(), this);
         getServer().getPluginManager().registerEvents(new ForceNationListener(this), this);
+        //getServer().getPluginManager().registerEvents(new KickBannedPlayers(), this);
     }
 
     // Setup depends
