@@ -18,6 +18,26 @@ public class DeleteOldTowns {
         long oneYearAgo = System.currentTimeMillis() - (365L * 24 * 60 * 60 * 1000);
         List<Town> townsToDelete = new ArrayList<>();
 
+//        int counter = 0;
+//        for (Town town : TownyUniverse.getInstance().getTowns()) {
+//            for (Resident resident : town.getResidents()) {
+//                UUID uuid = resident.getUUID();
+//
+//                OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
+//                long lastPlayed = offlinePlayer.getLastPlayed();
+//
+//                if (offlinePlayer.isOnline() || lastPlayed <= 1 || lastPlayed > oneYearAgo) {
+//                    continue;  // Active
+//                }
+//
+//                counter++;
+//
+//                log(INFO, "Would kick " + resident.getName() + " from " + town.getName());
+//            }
+//        }
+//        log(INFO, "Would kick " + counter + " residents");
+
+
         for (Town town : TownyUniverse.getInstance().getTowns()) {
             boolean hasActiveResident = false;
 

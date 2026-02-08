@@ -13,7 +13,6 @@ import org.bukkit.entity.Player;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 import static org.besser.teto.DIETLogger.*;
 
@@ -63,8 +62,8 @@ public class MayorReplaceCmd extends BaseCommand implements TownyCommandAdapter.
             return true;
         }
 
-        Town town = TownyAPI.getInstance().getTown(townName);
-        if (town == null) {
+        Town targetTown = TownyAPI.getInstance().getTown(townName);
+        if (targetTown == null) {
             sendError(sender, "Town '" + townName + "' not found.");
             return true;
         }
@@ -90,34 +89,58 @@ public class MayorReplaceCmd extends BaseCommand implements TownyCommandAdapter.
             return true;
         }
 
-        if (!senderNation.hasTown(town)) {
-            sendError(sender, town.getName() + " is not a member of your nation.");
+        if (!senderNation.hasTown(targetTown)) {
+            sendError(sender, targetTown.getName() + " is not a member of your nation.");
             return true;
         }
 
-        // Disabled so any member in the nation can be in the new mayor.
-        // TODO: This might cause issues if the mayor is the only resident of a town and they get removed and put into another town
-//        if (!newMayor.hasTown() || !Objects.equals(newMayor.getTownOrNull(), town)) {
-//            sendError(sender, newMayorName + " is not a citizen of " + town.getName() + ".");
-//            return true;
-//        }
+        try {
+            // We check hasTown and hasNation first to avoid exceptions
+            if (!newMayor.hasTown() || !newMayor.getTown().hasNation() ||
+                    !newMayor.getTown().getNation().equals(senderNation)) {
+                sendError(sender, newMayor.getName() + " is not a member of your nation.");
+                return true;
+            }
+        } catch (TownyException e) {
+            sendError(sender, "Failed to replace mayor. If this issue persists, please report it to an admin.");
+            log(WARNING, "Could not verify mayor stats: " + e.getMessage());
+            return true;
+        }
 
         // Swap mayor
-        Resident oldMayor = town.getMayor();
         try {
-            town.setMayor(newMayor);
+            // Check if they are in a different town (Towny requires they leave first)
+            if (newMayor.hasTown()) {
+                Town currentTown = newMayor.getTown();
 
-            TownyUniverse.getInstance().getDataSource().saveTown(town);
-            TownyUniverse.getInstance().getDataSource().saveResident(newMayor);
-            TownyUniverse.getInstance().getDataSource().saveNation(senderNation);
+                if (!currentTown.equals(targetTown)) {
+                    currentTown.removeResident(newMayor);
+                    newMayor.setTown(null); // Need to do both, otherwise Towny still thinks the mayor is in their old town.
+
+                    TownyUniverse.getInstance().getDataSource().saveAll();
+                }
+            }
+
+            // Ensure they are in the target town
+            if (!targetTown.hasResident(newMayor)) {
+                newMayor.setTown(targetTown);
+
+                TownyUniverse.getInstance().getDataSource().saveAll();
+            }
+
+            // Set as mayor
+            targetTown.setMayor(newMayor);
+            TownyUniverse.getInstance().getDataSource().saveAll();
+
         } catch (Exception e) {
             sendError(sender, "Failed to replace mayor. If this issue persists, please report it to an admin.");
-            log(WARNING, "Failed to replace mayor: " + e.getMessage());
+            log(WARNING, "Could not replace mayor of a town: " + e.getMessage());
             return true;
         }
 
-        sendSuccess(sender, "Mayor of " + ChatColor.AQUA + town.getName() + ChatColor.GREEN +
-                " has been changed from " + oldMayor.getName() + " to " + newMayor.getName() + ".");
+        sendSuccess(sender, "Mayor of " + ChatColor.AQUA + targetTown.getName() + ChatColor.GREEN +
+                " has been changed to " + ChatColor.AQUA + newMayor.getName() + ChatColor.GREEN +
+                ". Please confirm this took effect with /t <town name>.");
         return true;
     }
 

@@ -1,14 +1,12 @@
 package org.besser.teto;
 
 import com.earth2me.essentials.Essentials;
-
+import org.besser.teto.AntiCheat.NoInvisListener;
 import org.besser.teto.Commands.CommandManager;
+import org.besser.teto.Commands.Towny.MapColor.TownColorChangeListener;
 import org.besser.teto.Commands.Towny.RequireNation.ForceNationListener;
 import org.besser.teto.RandomSpawn.RandomSpawn;
 import org.besser.teto.RandomSpawn.SpawnSafeVerifier;
-
-import org.besser.teto.Commands.Towny.MapColor.TownColorChangeListener;
-
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -54,6 +52,7 @@ public final class Teto extends JavaPlugin {
         // Set up listeners
         getServer().getPluginManager().registerEvents(new TownColorChangeListener(), this);
         getServer().getPluginManager().registerEvents(new ForceNationListener(this), this);
+        getServer().getPluginManager().registerEvents(new NoInvisListener(), this);
         //getServer().getPluginManager().registerEvents(new KickBannedPlayers(), this);
     }
 
