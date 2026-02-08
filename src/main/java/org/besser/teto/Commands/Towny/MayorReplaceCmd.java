@@ -1,6 +1,7 @@
 package org.besser.teto.Commands.Towny;
 
 import com.palmergames.bukkit.towny.TownyAPI;
+import com.palmergames.bukkit.towny.TownyUniverse;
 import com.palmergames.bukkit.towny.exceptions.TownyException;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
@@ -105,6 +106,10 @@ public class MayorReplaceCmd extends BaseCommand implements TownyCommandAdapter.
         Resident oldMayor = town.getMayor();
         try {
             town.setMayor(newMayor);
+
+            TownyUniverse.getInstance().getDataSource().saveTown(town);
+            TownyUniverse.getInstance().getDataSource().saveResident(newMayor);
+            TownyUniverse.getInstance().getDataSource().saveNation(senderNation);
         } catch (Exception e) {
             sendError(sender, "Failed to replace mayor. If this issue persists, please report it to an admin.");
             log(WARNING, "Failed to replace mayor: " + e.getMessage());
