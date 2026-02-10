@@ -38,6 +38,7 @@ public class DeleteOldTowns {
 //        log(INFO, "Would kick " + counter + " residents");
 
 
+        // FIXME: This will put towns into ruin and cause some errors about failing to delete a town. fix that
         for (Town town : TownyUniverse.getInstance().getTowns()) {
             boolean hasActiveResident = false;
 
