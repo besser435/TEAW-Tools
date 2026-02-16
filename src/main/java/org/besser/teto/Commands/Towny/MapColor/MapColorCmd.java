@@ -1,17 +1,17 @@
 package org.besser.teto.Commands.Towny.MapColor;
 
 import com.palmergames.bukkit.towny.TownyAPI;
+import com.palmergames.bukkit.towny.TownySettings;
+import com.palmergames.bukkit.towny.TownyUniverse;
 import com.palmergames.bukkit.towny.exceptions.TownyException;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.metadata.BooleanDataField;
+import org.besser.teto.Commands.BaseCommand;
 import org.besser.teto.Commands.Towny.TownyCommandAdapter;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import com.palmergames.bukkit.towny.TownySettings;
-
-import org.besser.teto.Commands.BaseCommand;
 import org.bukkit.entity.Player;
 
 import java.util.Collections;
@@ -139,6 +139,8 @@ public class MapColorCmd extends BaseCommand implements TownyCommandAdapter.TabC
                 log(WARNING, "Failed to set color for town " + town.getName() + ": " + e.getMessage());
             }
         }
+
+        TownyUniverse.getInstance().getDataSource().saveAll();
 
         sendSuccess(sender, "Map color set to " + colorArg + " for all towns in the nation.");
     }
