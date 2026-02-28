@@ -28,4 +28,4 @@ random-spawns:
 
 ender-pearl-nerf:
   enabled: true
-  cooldown-time-seconds: 120
+  cooldown-time-seconds: 40

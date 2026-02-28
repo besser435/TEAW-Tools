@@ -37,11 +37,11 @@ public class EnderPearlCooldown implements Listener {
         if (player.hasCooldown(Material.ENDER_PEARL)) {
             event.setCancelled(true);
 
-            double ticks = player.getCooldown(Material.ENDER_PEARL);
-            double seconds = ticks / 20.0;
-
-            player.sendMessage(ChatColor.RED + "Still on cooldown for another " +
-                    String.format("%.1f", seconds) + " seconds!");
+//            double ticks = player.getCooldown(Material.ENDER_PEARL);
+//            double seconds = ticks / 20.0;
+//
+//            player.sendMessage(ChatColor.RED + "Still on cooldown for another " +
+//                    String.format("%.1f", seconds) + " seconds!");
         }
     }
 
