@@ -25,3 +25,7 @@ random-spawns:
     ne-corner:  # Northeast corner
       x: 7070
       z: -9201
+
+ender-pearl-nerf:
+  enabled: true
+  cooldown-time-seconds: 180
