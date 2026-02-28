@@ -5,7 +5,7 @@ import org.besser.teto.AntiCheat.NoInvisListener;
 import org.besser.teto.Commands.CommandManager;
 import org.besser.teto.Commands.Towny.MapColor.TownColorChangeListener;
 import org.besser.teto.Commands.Towny.RequireNation.ForceNationListener;
-import org.besser.teto.EnderPealNerf.EnderPearlCooldown;
+import org.besser.teto.EnderPearlNerf.EnderPearlCooldown;
 import org.besser.teto.RandomSpawn.RandomSpawn;
 import org.besser.teto.RandomSpawn.SpawnSafeVerifier;
 import org.bukkit.ChatColor;

@@ -1,4 +1,4 @@
-package org.besser.teto.EnderPealNerf;
+package org.besser.teto.EnderPearlNerf;
 
 import org.besser.teto.Teto;
 import org.bukkit.Bukkit;
