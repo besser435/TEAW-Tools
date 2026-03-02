@@ -21,7 +21,7 @@ public class EnderPearlCooldown implements Listener {
 
     public EnderPearlCooldown(Teto plugin) {
         this.plugin = plugin;
-        this.cooldownTimeSeconds = plugin.getConfig().getInt("ender-pearl-nerf.cooldown-time-seconds", 180);
+        this.cooldownTimeSeconds = plugin.getConfig().getInt("ender-pearl-nerf.cooldown-time-seconds", 40);
     }
 
     // Cancel if there is a cooldown
