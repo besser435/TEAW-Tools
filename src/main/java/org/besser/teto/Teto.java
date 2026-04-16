@@ -5,7 +5,7 @@ import org.besser.teto.AntiCheat.NoInvisListener;
 import org.besser.teto.Commands.CommandManager;
 import org.besser.teto.Commands.Towny.MapColor.TownColorChangeListener;
 import org.besser.teto.Commands.Towny.RequireNation.ForceNationListener;
-import org.besser.teto.EnderPearlNerf.EnderPearlCooldown;
+import org.besser.teto.ItemTweaks.ItemCooldowns;
 import org.besser.teto.RandomSpawn.RandomSpawn;
 import org.besser.teto.RandomSpawn.SpawnSafeVerifier;
 import org.bukkit.ChatColor;
@@ -55,11 +55,11 @@ public final class Teto extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ForceNationListener(this), this);
         getServer().getPluginManager().registerEvents(new NoInvisListener(), this);
 
-        boolean isPearlNerfEnabled = getConfig().getBoolean("ender-pearl-nerf.enabled", true);
-        if (isPearlNerfEnabled) {
-            getServer().getPluginManager().registerEvents(new EnderPearlCooldown(this), this);
+        boolean isItemCooldownsEnabled = getConfig().getBoolean("item-cooldowns.enabled", true);
+        if (isItemCooldownsEnabled) {
+            getServer().getPluginManager().registerEvents(new ItemCooldowns(this), this);
         } else {
-            log(WARNING, "TETO Ender Pearl nerfs are disabled.");
+            log(WARNING, "TETO Item Cooldowns are disabled.");
         }
         //getServer().getPluginManager().registerEvents(new KickBannedPlayers(), this);
     }

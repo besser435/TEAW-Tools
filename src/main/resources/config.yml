@@ -26,6 +26,7 @@ random-spawns:
       x: 7070
       z: -9201
 
-ender-pearl-nerf:
+item-cooldowns:
   enabled: true
-  cooldown-time-seconds: 40
+  ender-pearl-cooldown-time-seconds: 40
+  e-apple-cooldown-time-seconds: 300
